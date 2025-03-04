@@ -1,10 +1,9 @@
 {
-  "name": "chatbot-front",
+  "name": "chatbot-jos",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
+  "scripts": {    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"

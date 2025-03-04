@@ -1,18 +1,31 @@
 import axios from "axios";
 
-const API_URL="http://localhost:800/login"
+const API_URL_LOGIN = "http://localhost:800/login"
+
+const API_URL_REGISTER = "http://localhost:800/register"
 
 export const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post(`${API_URL}/login`, { email, password });
-      return response.data;
-    } catch (error: any) { 
-        if(error.response){
-          throw error.response.data;
-        }else{
-          throw error;
+        const response = await axios.post(`${API_URL_LOGIN}/login`, { email, password });
+        return response.data;
+    } catch (error: any) {
+        if (error.response) {
+            throw error.response.data;
+        } else {
+            throw error;
         }
-      }
-  };
+    }
+};
 
-
+export const register = async (name: string, email: string, password: string) => {
+    try {
+        const response = await axios.post(`${API_URL_REGISTER}/register`, { name, email, password });
+        return response.data;
+    } catch (error: any) {
+        if (error.response) {
+            throw error.response.data;
+        } else {
+            throw error;
+        }
+    }
+}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchChatResponse } from "../../auth/services/api";
+import { fetchChatResponse } from "../services/api";
 
 const ChatBox = () => {
     const [input, setInput] = useState("");
@@ -37,7 +37,9 @@ const ChatBox = () => {
             <input value={input} onChange={handleInputChange} placeholder="Escribe algo..." />
             {error && <h3 style={{ color: "red" }}>{error}</h3>}
             <button onClick={handleSend}>Enviar</button>
-            <p>Respuesta: {response}</p>
+            <div className="answer">
+                <p className="gpt-answer">Respuesta: {response}</p>
+            </div>
         </>
     );
 };

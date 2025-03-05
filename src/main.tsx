@@ -1,11 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
-import ChatBox from './modules/chat/components/ChatBox.tsx'
+import AppLayout from './modules/auth/AppLayout'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ChatBox />
+    <AppLayout></AppLayout>
   </StrictMode>,
 )

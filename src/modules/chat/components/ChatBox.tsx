@@ -1,35 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { fetchChatResponse } from "../services/api";
 
 const ChatBox = () => {
     const [input, setInput] = useState("");
     const [response, setResponse] = useState("");
-    const [error, setError] = useState("")
+    const [error, setError] = useState("");
+    const [typingResponse, setTypingResponse] = useState("");
 
-    const handleInputChange = (e: { target: { value: string; }; }) => {
+    const handleInputChange = (e: { target: { value: string } }) => {
         const value = e.target.value;
         setInput(value);
-
         if (value.length < 10) {
             setError("Ingresa al menos 10 carácteres");
         } else {
-            setError("")
+            setError("");
         }
-    }
+    };
 
     const handleSend = async () => {
-        if (error) {
-            alert("Por favor, corrige el error antes de enviar.");
-            return;
-        }
-        if (input.length < 10) {
-            alert("Por favor, ingresa al menos 10 caracteres");
+        if (error || input.length < 10) {
+            alert("Por favor, ingresa al menos 10 caracteres correctamente.");
             return;
         }
         const reply = await fetchChatResponse(input);
         setResponse(reply);
+        setTypingResponse("");
     };
 
+    useEffect(() => {
+        if (response) {
+            let index = 0;
+            setTypingResponse("");
+            const interval = setInterval(() => {
+                if (index < response.length) {
+                    setTypingResponse((prev) => prev + response[index]);
+                    index++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 10);
+            return () => clearInterval(interval);
+        }
+    }, [response]);
 
     return (
         <>
@@ -38,7 +50,7 @@ const ChatBox = () => {
             {error && <h3 style={{ color: "red" }}>{error}</h3>}
             <button onClick={handleSend}>Enviar</button>
             <div className="answer">
-                <p className="gpt-answer">Respuesta: {response}</p>
+                <p className="gpt-answer">Respuesta: {typingResponse}</p>
             </div>
         </>
     );

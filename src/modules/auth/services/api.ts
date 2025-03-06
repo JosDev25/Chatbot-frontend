@@ -1,20 +1,30 @@
 import axios from "axios";
 
-export const fetchChatResponse = async (text: string): Promise<string> => {
-
+export const LoginValidation = async (email: string, password: string): Promise<string> => {
     try {
-        //Session id was indeed needed first before sending the request to the chat
-        const sessionResponse = await axios.post("http://localhost:8000/session");
-        const session_id = sessionResponse.data.session_id;
+        const response = await axios.post("http://localhost:8000/login", {
+            email: email,
+            password: password
+        });
 
-        const response = await axios.post(`http://localhost:8000/chat`,
-            { text },
-            { params: { session_id } }
-        );
+        const data = response.data;
 
-        return response.data.response;
+        if (data.success) {
+            console.log("Éxito en el login");
+
+            if (data.user?.name && data.user?.email) { 
+                console.log("Usuario cargado correctamente:", data.user);
+                return `Bienvenido, ${data.user.name}!`;  
+            } else {
+                console.error("Error: La respuesta no tiene datos completos.");
+                return "Error: Datos de usuario incompletos.";
+            }
+        } else {
+            console.error("Error: Login fallido.");
+            return "Error: Credenciales incorrectas.";
+        }
     } catch (error) {
-        console.error("Error al obtener respuesta:", error);
+        console.error("Error al conectar con el servidor:", error);
         return "Error al conectar con el servidor.";
     }
 };

@@ -44,18 +44,25 @@ const ChatBox = () => {
     }, [response]);
 
     return (
-        <>
+        <div className="chat-wrapper">
             <h1>Freemiun GPT</h1>
-            <div className="answer">
-                <p className="gpt-answer">Respuesta: {typingResponse}</p>
+            <div className="chat-container">
+                <div className="answer-container">
+                    <div className="gpt-answer">
+                        <p>Respuesta: {typingResponse || "Hla, estoy bien gracias. ¿Y tú cómo estás? ¿En qué puedo ayudarte hoy?"}</p>
+                    </div>
+                </div>
+                <div className="input-container">
+                    <input
+                        value={input}
+                        onChange={handleInputChange}
+                        placeholder="Escribe algo..."
+                    />
+                    <button onClick={handleSend}>Enviar</button>
+                </div>
+                {error && <p className="error-message">{error}</p>}
             </div>
-            <div className="inputgpt">
-                <input value={input} onChange={handleInputChange} placeholder="Escribe algo..." />
-                <button onClick={handleSend}>Enviar</button>
-            </div>
-            {error && <h3 style={{ color: "red" }}>{error}</h3>}
-
-        </>
+        </div>
     );
 };
 

@@ -46,12 +46,15 @@ const ChatBox = () => {
     return (
         <>
             <h1>Freemiun GPT</h1>
-            <input value={input} onChange={handleInputChange} placeholder="Escribe algo..." />
-            {error && <h3 style={{ color: "red" }}>{error}</h3>}
-            <button onClick={handleSend}>Enviar</button>
             <div className="answer">
                 <p className="gpt-answer">Respuesta: {typingResponse}</p>
             </div>
+            <div className="inputgpt">
+                <input value={input} onChange={handleInputChange} placeholder="Escribe algo..." />
+                <button onClick={handleSend}>Enviar</button>
+            </div>
+            {error && <h3 style={{ color: "red" }}>{error}</h3>}
+
         </>
     );
 };

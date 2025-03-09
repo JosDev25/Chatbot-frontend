@@ -1,23 +1,33 @@
 import React, { useState } from 'react';
-import './ModalForm.css'
+import './ModalForm.css';
 import { LoginValidation } from '../services/api';
 
 interface LoginFormProps {
-    isOpen: boolean
-    onClose: () => void
+    isOpen: boolean;
+    onClose: () => void;
+    setIsLoggedIn: (value: boolean) => void;
+    setUserName: (name: string) => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ isOpen, onClose }) => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [message, setMessage] = useState<string | null>(null)
+const LoginForm: React.FC<LoginFormProps> = ({ isOpen, onClose, setIsLoggedIn, setUserName }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState<string | null>(null);
 
     const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault()
-
-        const responsMessage = await LoginValidation(email, password)
-        setMessage(responsMessage)
-    }
+        event.preventDefault();
+        const response = await LoginValidation(email, password);
+        
+        if (response.startsWith("Bienvenido")) {
+            const name = response.split(",")[1].trim();
+            setIsLoggedIn(true);
+            setUserName(name);
+            localStorage.setItem("user", JSON.stringify({ name, email }));
+            onClose();  
+        } else {
+            setMessage(response);
+        }
+    };
 
     if (!isOpen) return null;
 
@@ -31,26 +41,22 @@ const LoginForm: React.FC<LoginFormProps> = ({ isOpen, onClose }) => {
                     <h2>Iniciar Sesión</h2>
                     <form onSubmit={handleSubmit}>
                         <label>Email</label>
-                        <br />
-                        <input
-                            type="email"
-                            name="email"
+                        <input 
+                            type="email" 
                             className="modal-input"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)} />
-                        <br />
+                            onChange={(e) => setEmail(e.target.value)} 
+                        />
                         <label>Password</label>
-                        <br />
-                        <input
-                            type="password"
-                            name="password"
+                        <input 
+                            type="password" 
                             className="modal-input"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)} />
-                        <br />
-                        <button
-                            type="submit"
-                            className="modal-button">Iniciar Sesión</button>
+                            onChange={(e) => setPassword(e.target.value)} 
+                        />
+                        <button type="submit" className="modal-button">
+                            Iniciar Sesión
+                        </button>
                     </form>
                     {message && <p className="modal-message">{message}</p>}
                 </div>

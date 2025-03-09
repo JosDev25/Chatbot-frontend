@@ -29,22 +29,20 @@ export const LoginValidation = async (email: string, password: string): Promise<
     }
 };
 
-export const Register = async (name: string, email: string, password: string): Promise<string> => {
+export const Register = async (name: string, email: string, password: string, sessionId?: string): Promise<string> => {
     try {
-        const response = await axios.post("http://localhost:8000/register", {
-            name: name,
-            email: email,
-            password: password
-        })
-
-        return response.data;
-    } catch (error) {
-        console.error("Error al registrar", error)
-        if (axios.isAxiosError(error) && error.response) {
-            return `Error: ${error.response.data.message || "Error desconocido"}`;
-        } else {
-            return "Error de conexión con el servidor.";
+        const requestBody: any = { name, email, password };
+        if (sessionId) {
+            requestBody.session_id = sessionId;
         }
 
+        const response = await axios.post(`http://localhost:8000/register`, requestBody);
+        return response.data.message;
+    } catch (error) {
+        console.error("Error al registrar", error);
+        if (axios.isAxiosError(error) && error.response) {
+            return `Error: ${error.response.data.detail || "Error desconocido"}`;
+        }
+        return "Error de conexión con el servidor.";
     }
-}
+};

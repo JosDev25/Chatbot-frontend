@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from './components/Navbar/Navbar';
-import ChatBox from '../chat/components/ChatBox';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import Navbar from "./components/Navbar/Navbar";
+import ChatBox from "../chat/components/ChatBox";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
+import axios from "axios";
 
 const AppLayout: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -11,6 +11,7 @@ const AppLayout: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [chatHistory, setChatHistory] = useState<{ user: string; bot: string }[]>([]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -22,7 +23,6 @@ const AppLayout: React.FC = () => {
       createAnonymousSession();
     }
   }, []);
-
 
   const createAnonymousSession = async () => {
     try {
@@ -38,7 +38,6 @@ const AppLayout: React.FC = () => {
       console.error("Error creando sesión anónima:", error);
     }
   };
-
 
   const handleLoginClick = () => {
     setShowLoginModal(true);
@@ -59,10 +58,11 @@ const AppLayout: React.FC = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("session_id");
     createAnonymousSession();
+    setChatHistory([]); 
   };
 
   return (
-    <div>
+    <div className="app-layout">
       <Navbar
         onLoginClick={handleLoginClick}
         onRegisterClick={handleRegisterClick}
@@ -70,8 +70,16 @@ const AppLayout: React.FC = () => {
         isLoggedIn={isLoggedIn}
         userName={userName}
       />
-      <div style={{ padding: '20px' }}>
-        <ChatBox isLoggedIn={isLoggedIn} sessionId={sessionId} />
+      <div className="content-container">
+      
+        <div className="chat-container">
+          <ChatBox
+            isLoggedIn={isLoggedIn}
+            sessionId={sessionId}
+            chatHistory={chatHistory}
+            setChatHistory={setChatHistory} 
+          />
+        </div>
       </div>
       <LoginForm
         isOpen={showLoginModal}
@@ -79,7 +87,6 @@ const AppLayout: React.FC = () => {
         setIsLoggedIn={setIsLoggedIn}
         setUserName={setUserName}
       />
-
       <RegisterForm isOpen={showRegisterModal} onClose={handleCloseModal} />
     </div>
   );

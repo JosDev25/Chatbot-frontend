@@ -13,7 +13,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ isOpen, onClose }) => {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
-    
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         setMessage("");
@@ -32,7 +32,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ isOpen, onClose }) => {
         }
 
         try {
-            const sessionId = localStorage.getItem("session_id") || undefined; 
+            const sessionId = localStorage.getItem("session_id") || undefined;
             const response = await Register(name, email, password, sessionId);
 
             if (response.includes("Error")) {
@@ -48,10 +48,10 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ isOpen, onClose }) => {
             console.error("Error al registrarse:", error);
             setMessage("Error al registrarse. Inténtalo de nuevo.");
         }
-        
+
     };
 
-    
+
     if (!isOpen) return null;
 
     return (
@@ -64,6 +64,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ isOpen, onClose }) => {
                     <h2>Registrarse</h2>
                     <form onSubmit={handleSubmit}>
                         <label>Nombre</label>
+                        <br />
                         <input
                             type="text"
                             name="name"
@@ -71,8 +72,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ isOpen, onClose }) => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-
+                        <br />
                         <label>Email</label>
+                        <br />
                         <input
                             type="email"
                             name="email"
@@ -80,8 +82,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ isOpen, onClose }) => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-
+                        <br />
                         <label>Password</label>
+                        <br />
                         <input
                             type="password"
                             name="password"
@@ -89,7 +92,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ isOpen, onClose }) => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-
+                        <br />
                         <button type="submit" className="modal-button">
                             Registrarse
                         </button>

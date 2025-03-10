@@ -12,6 +12,14 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId }) => {
     const [error, setError] = useState("");
     const [typingResponse, setTypingResponse] = useState("");
     const [apiCallsRemaining, setApiCallsRemaining] = useState<number | null>(null);
+    const [selectedModel, setSelectedModel] = useState("gpt-4o");
+
+    const availableModels = [
+        { value: "gpt-3.5-turbo", label: "GPT-3.5 Turbo" },
+        { value: "gpt-4", label: "GPT-4" },
+        { value: "gpt-4o", label: "GPT-4 Omni" },
+        { value: "gpt-4o-mini", label: "GPT-4o Mini" },
+    ];
 
     useEffect(() => {
         if (!isLoggedIn && sessionId) {
@@ -68,13 +76,13 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId }) => {
             return;
         }
 
-        if (error || input.length < 10) {
+        if (input.length < 10) {
             alert("Por favor, ingresa al menos 10 caracteres correctamente.");
             return;
         }
 
         try {
-            const requestBody: any = { text: input };
+            const requestBody: any = { text: input, model: selectedModel };
 
             if (isLoggedIn) {
                 const userData = JSON.parse(localStorage.getItem("user") || "{}");
@@ -102,13 +110,21 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId }) => {
         }
     };
 
-
-
-
     return (
         <div className="chat-wrapper">
             <h2>Freemiun GPT</h2>
             <div className="chat-container">
+                <div className="model-selector">
+                    <label>Selecciona un modelo:</label>
+                    <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)}>
+                        {availableModels.map((model) => (
+                            <option key={model.value} value={model.value}>
+                                {model.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
                 {!isLoggedIn && apiCallsRemaining !== null && apiCallsRemaining <= 0 ? (
                     <p className="error-message">
                         Has alcanzado el límite de intentos como usuario anónimo. <br />

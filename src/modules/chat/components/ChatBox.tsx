@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 interface ChatBoxProps {
     isLoggedIn: boolean;
     sessionId?: string | null;
+    chatHistory: { user: string; bot: string }[];
+    setChatHistory: React.Dispatch<React.SetStateAction<{ user: string; bot: string }[]>>;
 }
 
-const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId }) => {
+const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId, chatHistory, setChatHistory }) => {
     const [input, setInput] = useState("");
     const [response, setResponse] = useState("");
     const [error, setError] = useState("");
@@ -98,6 +100,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId }) => {
                 alert("Has alcanzado el límite de intentos. Regístrate o inicia sesión.");
                 return;
             }
+            setChatHistory((prevHistory) => [...prevHistory, { user: input, bot: data.response }]);
+
 
             setResponse(data.response || "");
             setInput("");
@@ -138,6 +142,18 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId }) => {
                             </div>
                         </div>
                         {error && <p className="error-message">{error}</p>}
+                        <div className="chat-history">
+                            <h3>Historial de Chat</h3>
+                            <ul>
+                                {chatHistory.map((chat, index) => (
+                                    <li key={index}>
+                                        <strong>Tú:</strong> {chat.user} <br />
+                                        <strong>GPT:</strong> {chat.bot}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
                         <div className="input-container">
                             <input
                                 value={input}
@@ -158,8 +174,10 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId }) => {
                     </>
                 )}
             </div>
+
         </div>
     );
 };
+
 
 export default ChatBox;

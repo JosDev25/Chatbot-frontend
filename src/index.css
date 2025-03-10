@@ -106,6 +106,17 @@ button:hover {
   margin-top: 0.5rem;
 }
 
+.model-selector select {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #444;
+  transition: 0.3s;
+}
+
 @media (max-width: 768px) {
   .input-container {
     flex-direction: column;

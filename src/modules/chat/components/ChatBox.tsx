@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import CodeBlock from "./CodeBlock";
 
 interface ChatBoxProps {
     isLoggedIn: boolean;
@@ -48,7 +49,16 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId, chatHistory, s
         }
     }, [response]);
 
-
+    const extractCodeAndLanguage = (text: string) => {
+        const match = text.match(/```(\w+)?\n([\s\S]*?)```/);
+        if (match) {
+            return {
+                language: match[1] || "plaintext",
+                code: match[2].trim(),
+            };
+        }
+        return null;
+    };
 
     const fetchApiCallCount = async (sessionId: string) => {
         try {
@@ -114,6 +124,8 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId, chatHistory, s
         }
     };
 
+    const extractedCode = extractCodeAndLanguage(response);
+
     return (
         <div className="chat-wrapper">
             <h2>Freemiun GPT</h2>
@@ -138,21 +150,57 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId, chatHistory, s
                     <>
                         <div className="answer-container">
                             <div className="gpt-answer">
-                                <p>Respuesta: {typingResponse || response || "Hola, ¿en qué puedo ayudarte hoy?"}</p>
+                                <p>Respuesta:</p>
+                                {extractedCode ? (
+                                    <CodeBlock
+                                        code={extractedCode.code}
+                                        language={extractedCode.language}
+                                    />
+                                ) : (
+                                    <p>{typingResponse || response || "Hola, ¿en qué puedo ayudarte hoy?"}</p>
+                                )}
                             </div>
                         </div>
                         {error && <p className="error-message">{error}</p>}
                         <div className="chat-history">
                             <h3>Historial de Chat</h3>
-                            <ul>
-                                {chatHistory.map((chat, index) => (
-                                    <li key={index}>
-                                        <strong>Tú:</strong> {chat.user} <br />
-                                        <strong>GPT:</strong> {chat.bot}
-                                    </li>
-                                ))}
+                            <ul style={{ listStyle: "none", padding: 0 }}>
+                                {chatHistory.map((chat, index) => {
+                                    const extractedCode = extractCodeAndLanguage(chat.bot);
+                                    return (
+                                        <li key={index} style={{ marginBottom: "15px", display: "flex", flexDirection: "column" }}>
+                                            <div style={{
+                                                backgroundColor: "#2C2F33",
+                                                color: "white",
+                                                padding: "10px",
+                                                borderRadius: "10px",
+                                                alignSelf: "flex-end",
+                                                maxWidth: "70%"
+                                            }}>
+                                                <strong>Tú:</strong> {chat.user}
+                                            </div>
+                                            <div style={{
+                                                backgroundColor: "#23272A",
+                                                color: "#ccc",
+                                                padding: "10px",
+                                                borderRadius: "10px",
+                                                alignSelf: "flex-start",
+                                                maxWidth: "70%",
+                                                marginTop: "5px"
+                                            }}>
+                                                <strong>GPT:</strong>
+                                                {extractedCode ? (
+                                                    <CodeBlock code={extractedCode.code} language={extractedCode.language} />
+                                                ) : (
+                                                    <p dangerouslySetInnerHTML={{ __html: chat.bot.replace(/\n/g, "<br>") }} />
+                                                )}
+                                            </div>
+                                        </li>
+                                    );
+                                })}
                             </ul>
                         </div>
+
 
                         <div className="input-container">
                             <input

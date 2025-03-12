@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const API_URL_LOGIN = "http://localhost:800/login"
+const API_URL_LOGIN = `${import.meta.env.VITE_API_BASE_URL}/login`;
+const API_URL_REGISTER = `${import.meta.env.VITE_API_BASE_URL}/register`;
 
-const API_URL_REGISTER = "http://localhost:800/register"
 
 export const login = async (email: string, password: string) => {
     try {

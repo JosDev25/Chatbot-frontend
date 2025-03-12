@@ -28,7 +28,7 @@ const AppLayout: React.FC = () => {
     try {
       const storedSession = localStorage.getItem("session_id");
       if (!storedSession) {
-        const response = await axios.post("http://localhost:8000/session");
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/session`);
         localStorage.setItem("session_id", response.data.session_id);
         setSessionId(response.data.session_id);
       } else {
@@ -58,7 +58,7 @@ const AppLayout: React.FC = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("session_id");
     createAnonymousSession();
-    setChatHistory([]); 
+    setChatHistory([]);
   };
 
   return (
@@ -71,13 +71,13 @@ const AppLayout: React.FC = () => {
         userName={userName}
       />
       <div className="content-container">
-      
+
         <div className="chat-container">
           <ChatBox
             isLoggedIn={isLoggedIn}
             sessionId={sessionId}
             chatHistory={chatHistory}
-            setChatHistory={setChatHistory} 
+            setChatHistory={setChatHistory}
           />
         </div>
       </div>

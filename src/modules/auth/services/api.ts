@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const LoginValidation = async (email: string, password: string): Promise<string> => {
     try {
-        const response = await axios.post("http://localhost:8000/login", {
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/login`, {
             email: email,
             password: password
         });
@@ -36,7 +36,7 @@ export const Register = async (name: string, email: string, password: string, se
             requestBody.session_id = sessionId;
         }
 
-        const response = await axios.post(`http://localhost:8000/register`, requestBody);
+        const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/register`, requestBody);
         return response.data.message;
     } catch (error) {
         console.error("Error al registrar", error);

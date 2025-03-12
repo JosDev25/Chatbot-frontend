@@ -62,7 +62,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId, chatHistory, s
 
     const fetchApiCallCount = async (sessionId: string) => {
         try {
-            const res = await axios.get(`http://localhost:8000/api_calls`, { params: { session_id: sessionId } });
+            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api_calls`, { params: { session_id: sessionId } });
             if (res.status !== 200) {
                 console.warn("La sesión anónima no tiene registros. Es posible que sea nueva.");
                 setApiCallsRemaining(5);
@@ -103,7 +103,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ isLoggedIn, sessionId, chatHistory, s
                 requestBody.session_id = sessionId;
             }
 
-            const response = await axios.post("http://localhost:8000/chat", requestBody);
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/chat`, requestBody);
             const data = response.data;
 
             if (data.limit_reached) {

@@ -10,9 +10,7 @@
 5. [Prerequisites](#prerequisites)
 6. [Installation and Execution](#installation-and-execution)
 7. [Main Screens](#main-screens)
-8. [Contributing](#contributing)
-9. [License](#license)
-10. [Contact](#contact)
+8. [Contact](#contact)
 
 ## Project Description
 The **AI Chat Assistant SPA** frontend is a **Single Page Application (SPA)** built with **React 19 + Vite**. It provides a smooth and efficient interface for users to interact with the AI assistant, manage their sessions, and retrieve chat history.
